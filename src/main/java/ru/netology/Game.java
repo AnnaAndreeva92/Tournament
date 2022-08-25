@@ -2,13 +2,11 @@ package ru.netology;
 
 import java.util.LinkedList;
 
+import java.util.ArrayList;
+
 public class Game {
-    LinkedList<Player> players;
+    private LinkedList<Player> players = new LinkedList<>();
 
-    public Game() {
-
-        players = new LinkedList<Player>();
-    }
 
     public void register(Player player) {
 
@@ -17,36 +15,27 @@ public class Game {
 
     public int round(String playerName1, String playerName2) throws NotRegisteredException {
 
-        Player player2;
-        Player player1;
+        int result = 0;
 
-        if (scan(playerName1) == -1) {
-            throw new NotRegisteredException("ошибка не зарегистрирован пользователь " + playerName1);
+        Player player1 = findByName(playerName1);
+        Player player2 = findByName(playerName2);
+
+        if (player1.getStrength() > player2.getStrength()) {
+            result = 1;
+        } else if (player1.getStrength() < player2.getStrength()) {
+            result = 2;
         }
-        if (scan(playerName2) == -1) {
-            throw new NotRegisteredException("ошибка не зарегистрирован пользователь " + playerName1);
-        }
 
-        player2 = players.get(scan(playerName2));
-        player1 = players.get(scan(playerName1));
-        int a = player1.strength - player2.strength;
-
-
-        if (a > 0)
-            return 1;
-        if (a < 0)
-            return 2;
-        return 0;
+        return result;
     }
 
-    private int scan(String playerName) {
-        Player tmp;
-        for (int i = 0; i <= players.size() - 1; i++) {
-            tmp = players.get(i);
-            if (playerName == tmp.name) {
-                return i;
+    private Player findByName(String playerName) throws NotRegisteredException {
+
+        for (Player player : players) {
+            if (player.getName().equals(playerName)) {
+                return player;
             }
         }
-        return -1;
+        throw new NotRegisteredException(playerName);
     }
 }
